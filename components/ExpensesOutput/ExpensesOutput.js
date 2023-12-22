@@ -36,6 +36,30 @@ function ExpensesOutput({ expenses, expensesPeriod }) {
       amount: 80.99,
       date: new Date("2022-02-18"),
     },
+    {
+      id: "e6",
+      description: "A pair of Trouser",
+      amount: 45.99,
+      date: new Date("2022-12-17"),
+    },
+    {
+      id: "e7",
+      description: "Sunglasses",
+      amount: 5.99,
+      date: new Date("2023-12-16"),
+    },
+    {
+      id: "e8",
+      description: "Book",
+      amount: 14.99,
+      date: new Date("2022-02-19"),
+    },
+    {
+      id: "e9",
+      description: "Mobile Phone",
+      amount: 80.99,
+      date: new Date("2022-02-18"),
+    },
   ];
   return (
     <View style={styles.container}>
@@ -50,7 +74,9 @@ export default ExpensesOutput;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingTop: 24,
+    paddingHorizontal: 24,
+    paddingBottom: 0,
     backgroundColor: GlobalStyles.colors.primary700,
   },
 });
