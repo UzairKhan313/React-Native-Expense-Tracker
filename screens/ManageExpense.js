@@ -11,9 +11,15 @@ function ManageExpenseScreen({ route, navigation }) {
   // Converting editingExpenseId to a boolean
   const isEditing = !!editingExpenseId;
 
-  function deleteExpenseHandler() {}
-  function cancelHandler() {}
-  function confirmHandler() {}
+  function deleteExpenseHandler() {
+    navigation.goBack();
+  }
+  function cancelHandler() {
+    navigation.goBack();
+  }
+  function confirmHandler() {
+    navigation.goBack();
+  }
 
   useLayoutEffect(() => {
     //   you should not called setOptions directly instead call is in the useLayoutEffect()
