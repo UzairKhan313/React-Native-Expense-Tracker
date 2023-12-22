@@ -9,6 +9,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import ManageExpenseScreen from "./screens/ManageExpense";
 import RecentExpensesScreen from "./screens/RecentExpenses";
 import AllExpensesScreens from "./screens/AllExpenses";
+import IconButton from "./components/UI/IconButton";
 import { GlobalStyles } from "./constants/styles";
 
 export default function App() {
@@ -19,13 +20,25 @@ export default function App() {
   function ExpensesOverview() {
     return (
       <BottomTabs.Navigator
-        screenOptions={{
+        screenOptions={({ navigation }) => ({
           headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
           headerTintColor: "white",
           tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
           tabBarActiveTintColor: GlobalStyles.colors.accent500,
           headerTitleAlign: "center",
-        }}
+          headerRight: ({ tintColor }) => {
+            return (
+              <IconButton
+                icon="add"
+                size={24}
+                color={tintColor}
+                onPress={() => {
+                  navigation.navigate("ManageExpense");
+                }}
+              />
+            );
+          },
+        })}
       >
         <BottomTabs.Screen
           name="RecentExpenses"
