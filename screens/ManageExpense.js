@@ -21,19 +21,11 @@ function ManageExpenseScreen({ route, navigation }) {
   function cancelHandler() {
     navigation.goBack();
   }
-  function confirmHandler() {
+  function confirmHandler(expenseData) {
     if (isEditing) {
-      expenesCtx.updateExpense(editingExpenseId, {
-        description: "Update Expense",
-        amount: 0.99,
-        date: new Date("2023-12-23"),
-      });
+      expenesCtx.updateExpense(editingExpenseId, expenseData);
     } else {
-      expenesCtx.addExpense({
-        description: "Add Expense",
-        amount: 0.99,
-        date: new Date("2023-12-22"),
-      });
+      expenesCtx.addExpense(expenseData);
     }
     navigation.goBack();
   }
