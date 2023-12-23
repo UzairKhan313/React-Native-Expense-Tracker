@@ -14,6 +14,10 @@ function ManageExpenseScreen({ route, navigation }) {
   // Converting editingExpenseId to a boolean
   const isEditing = !!editingExpenseId;
 
+  const selectExpense = expenesCtx.expenses.find(
+    (expense) => expense.id === editingExpenseId
+  );
+
   function deleteExpenseHandler() {
     expenesCtx.deleteExpense(editingExpenseId);
     navigation.goBack();
@@ -44,6 +48,7 @@ function ManageExpenseScreen({ route, navigation }) {
         onCancel={cancelHandler}
         onSubmit={confirmHandler}
         submitButtonText={isEditing ? "Update" : "Add"}
+        defaultValues={selectExpense}
       />
 
       {isEditing && (
