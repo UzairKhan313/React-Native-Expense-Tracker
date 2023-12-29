@@ -5,7 +5,7 @@ import IconButton from "../components/UI/IconButton";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 import { GlobalStyles } from "../constants/styles";
 import { ExpensesContext } from "../store/context";
-import { storeExpense } from "../utils/http";
+import { storeExpense, updateExpense, deleteExpense } from "../utils/http";
 
 function ManageExpenseScreen({ route, navigation }) {
   const expenesCtx = useContext(ExpensesContext);
@@ -18,7 +18,8 @@ function ManageExpenseScreen({ route, navigation }) {
     (expense) => expense.id === editingExpenseId
   );
 
-  function deleteExpenseHandler() {
+ async function deleteExpenseHandler() {
+    await deleteExpense(editingExpenseId)
     expenesCtx.deleteExpense(editingExpenseId);
     navigation.goBack();
   }
@@ -28,6 +29,7 @@ function ManageExpenseScreen({ route, navigation }) {
   async function confirmHandler(expenseData) {
     if (isEditing) {
       expenesCtx.updateExpense(editingExpenseId, expenseData);
+      await updateExpense(editingExpenseId, expenseData);
     } else {
       // storing Expense in fire base
       const id = await storeExpense(expenseData);
