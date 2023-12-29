@@ -7,9 +7,11 @@ import { GlobalStyles } from "../constants/styles";
 import { ExpensesContext } from "../store/context";
 import { storeExpense, updateExpense, deleteExpense } from "../utils/http";
 import LoadingOverLay from "../components/UI/LoadingOverLay";
+import ErrorOverlay from "../components/UI/ErrorOverlay";
 
 function ManageExpenseScreen({ route, navigation }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState();
 
   const expenesCtx = useContext(ExpensesContext);
   // conditionalluy check the param is define or not
@@ -23,25 +25,36 @@ function ManageExpenseScreen({ route, navigation }) {
 
   async function deleteExpenseHandler() {
     setIsSubmitting(true);
-    await deleteExpense(editingExpenseId);
-    // setIsSubmitting(false);
-    expenesCtx.deleteExpense(editingExpenseId);
-    navigation.goBack();
+    try {
+      await deleteExpense(editingExpenseId);
+      // setIsSubmitting(false);
+      expenesCtx.deleteExpense(editingExpenseId);
+      navigation.goBack();
+    } catch (err) {
+      console.log(err);
+      setError("Could not Delete the Expense");
+      setIsSubmitting(false);
+    }
   }
   function cancelHandler() {
     navigation.goBack();
   }
   async function confirmHandler(expenseData) {
     setIsSubmitting(true);
-    if (isEditing) {
-      expenesCtx.updateExpense(editingExpenseId, expenseData);
-      await updateExpense(editingExpenseId, expenseData);
-    } else {
-      // storing Expense in fire base
-      const id = await storeExpense(expenseData);
-      expenesCtx.addExpense({ ...expenseData, id: id });
+    try {
+      if (isEditing) {
+        expenesCtx.updateExpense(editingExpenseId, expenseData);
+        await updateExpense(editingExpenseId, expenseData);
+      } else {
+        // storing Expense in fire base
+        const id = await storeExpense(expenseData);
+        expenesCtx.addExpense({ ...expenseData, id: id });
+      }
+      navigation.goBack();
+    } catch (err) {
+      setError("Could not update or add the new Expense");
+      setIsSubmitting(false);
     }
-    navigation.goBack();
   }
 
   useLayoutEffect(() => {
@@ -51,6 +64,14 @@ function ManageExpenseScreen({ route, navigation }) {
       headerTitleAlign: "center",
     });
   }, [isEditing, navigation]);
+
+  function errorHandler() {
+    setError(false);
+  }
+
+  if (error && !isSubmitting) {
+    return <ErrorOverlay message={error} onConfirm={errorHandler} />;
+  }
 
   if (isSubmitting) {
     return <LoadingOverLay />;
