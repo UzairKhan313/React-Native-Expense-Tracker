@@ -3,9 +3,9 @@ import { View, StyleSheet } from "react-native";
 
 import IconButton from "../components/UI/IconButton";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
-import Button from "../components/UI/Button";
 import { GlobalStyles } from "../constants/styles";
 import { ExpensesContext } from "../store/context";
+import { storeExpense } from "../utils/http";
 
 function ManageExpenseScreen({ route, navigation }) {
   const expenesCtx = useContext(ExpensesContext);
@@ -30,6 +30,8 @@ function ManageExpenseScreen({ route, navigation }) {
       expenesCtx.updateExpense(editingExpenseId, expenseData);
     } else {
       expenesCtx.addExpense(expenseData);
+      // storing Expense in fire base
+      storeExpense(expenseData);
     }
     navigation.goBack();
   }
