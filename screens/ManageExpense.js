@@ -25,13 +25,13 @@ function ManageExpenseScreen({ route, navigation }) {
   function cancelHandler() {
     navigation.goBack();
   }
-  function confirmHandler(expenseData) {
+  async function confirmHandler(expenseData) {
     if (isEditing) {
       expenesCtx.updateExpense(editingExpenseId, expenseData);
     } else {
-      expenesCtx.addExpense(expenseData);
       // storing Expense in fire base
-      storeExpense(expenseData);
+      const id = await storeExpense(expenseData);
+      expenesCtx.addExpense({ ...expenseData, id: id });
     }
     navigation.goBack();
   }
