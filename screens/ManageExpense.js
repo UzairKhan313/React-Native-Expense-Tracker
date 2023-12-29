@@ -1,4 +1,4 @@
-import { useContext, useLayoutEffect } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 
 import IconButton from "../components/UI/IconButton";
@@ -6,8 +6,11 @@ import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 import { GlobalStyles } from "../constants/styles";
 import { ExpensesContext } from "../store/context";
 import { storeExpense, updateExpense, deleteExpense } from "../utils/http";
+import LoadingOverLay from "../components/UI/LoadingOverLay";
 
 function ManageExpenseScreen({ route, navigation }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const expenesCtx = useContext(ExpensesContext);
   // conditionalluy check the param is define or not
   const editingExpenseId = route.params?.expenseId;
@@ -18,8 +21,10 @@ function ManageExpenseScreen({ route, navigation }) {
     (expense) => expense.id === editingExpenseId
   );
 
- async function deleteExpenseHandler() {
-    await deleteExpense(editingExpenseId)
+  async function deleteExpenseHandler() {
+    setIsSubmitting(true);
+    await deleteExpense(editingExpenseId);
+    // setIsSubmitting(false);
     expenesCtx.deleteExpense(editingExpenseId);
     navigation.goBack();
   }
@@ -27,6 +32,7 @@ function ManageExpenseScreen({ route, navigation }) {
     navigation.goBack();
   }
   async function confirmHandler(expenseData) {
+    setIsSubmitting(true);
     if (isEditing) {
       expenesCtx.updateExpense(editingExpenseId, expenseData);
       await updateExpense(editingExpenseId, expenseData);
@@ -46,6 +52,9 @@ function ManageExpenseScreen({ route, navigation }) {
     });
   }, [isEditing, navigation]);
 
+  if (isSubmitting) {
+    return <LoadingOverLay />;
+  }
   return (
     <View style={styles.container}>
       <ExpenseForm
